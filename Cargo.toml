@@ -2,4 +2,5 @@
 
 members = [
 	"substring_search",
+	"simple_sort",
 ]
