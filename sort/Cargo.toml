@@ -8,3 +8,18 @@ edition = "2018"
 
 [dependencies]
 rand = "0.7"
+
+[dev-dependencies]
+criterion = "0.3"
+
+[[bench]]
+name = "heap_sort_bench"
+harness = false
+
+[[bench]]
+name = "selection_sort_bench"
+harness = false
+
+[[bench]]
+name = "selection_vs_heap_bench"
+harness = false
