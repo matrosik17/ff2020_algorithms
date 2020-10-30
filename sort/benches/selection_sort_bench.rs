@@ -10,7 +10,6 @@ fn selection_sort_benchmark(c: &mut Criterion) {
     let params = SimpleSortBenchParams {
         name: String::from("selection_sort"),
         sizes: vec![20, 100, 1000, 10_000],
-        random_state: None,
     };
     simple_sort_bench(selection_sort, params, c)
 }

@@ -10,7 +10,6 @@ fn heap_sort_benchmark(c: &mut Criterion) {
     let params = SimpleSortBenchParams {
         name: String::from("heap_sort"),
         sizes: vec![10, 1000, 10_000, 100_000, 1_000_000, 10_000_000],
-        random_state: None,
     };
     simple_sort_bench(heap_sort, params, c)
 }
