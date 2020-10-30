@@ -6,6 +6,7 @@ pub fn selection_sort<T: Ord>(vec: &mut [T]) {
                 small = j;
             }
         }
+        // if i != small { vec.swap(small, i); }'
         vec.swap(small, i);
     }
 }

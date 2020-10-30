@@ -5,7 +5,6 @@ fn sift<T: Ord>(vec: &mut [T], left_idx: usize, right_idx: usize) {
         let left_child_idx = 2 * root_idx + 1;
         let right_child_idx = left_child_idx + 1;
 
-
         // check heap bounds
         if left_child_idx >= right_idx { break; }
 
