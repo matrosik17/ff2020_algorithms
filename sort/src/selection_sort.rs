@@ -6,8 +6,10 @@ pub fn selection_sort<T: Ord>(vec: &mut [T]) {
                 small = j;
             }
         }
-        // if i != small { vec.swap(small, i); }'
-        vec.swap(small, i);
+        if i != small { vec.swap(small, i); };
+        // vec.swap(small, i);
+        // TODO: заменить swap
+        // TODO: добавить таймер
     }
 }
 

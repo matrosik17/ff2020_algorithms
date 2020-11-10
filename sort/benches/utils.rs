@@ -120,7 +120,7 @@ pub fn compare_time_order<F1: Fn(&mut [i64]), F2: Fn(&mut [i64])>(
 ) {
 
     let step_size = (params.size / params.n_points) as usize;
-    let mut target_vec: Vec<i64> = (0..params.size).map(i64::from).map(|x| x - params.size/2).rev().collect();
+    let mut target_vec: Vec<i64> = (0..params.size).map(i64::from).collect();
     let mut rng = thread_rng();
     target_vec.shuffle(&mut rng);
 

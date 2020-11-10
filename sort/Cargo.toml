@@ -23,3 +23,7 @@ harness = false
 [[bench]]
 name = "selection_vs_heap_bench"
 harness = false
+
+[[bench]]
+name = "qsort_rec_vs_it_bench"
+harness = false
