@@ -1,9 +1,11 @@
+// TODO: доказать эквивалентность версии с семинара
+// TODO2: проанализировать число сравнений и swap'ов
 fn partition<T: Ord>(vec: &mut [T], first: usize, last: usize) -> usize {
     let mut i = first;
 
     for j in first..last {
         if vec[j] < vec[last] {
-            vec.swap(i, j);
+            if j != i { vec.swap(i, j); }
             i += 1;
         }
     }
@@ -25,8 +27,20 @@ pub fn qsort<T: Ord>(vec: &mut [T]) {
     qsort_impl(vec, first, last);
 }
 
+// TODO: эффективнее использовать стэк
 pub fn qsort_iterative<T: Ord>(vec: &mut [T]) {
+    let mut stack = Vec::<(usize, usize)>::with_capacity(vec.len());
 
+    let first = 0;
+    let last = vec.len() - 1;
+    stack.push((first, last));
+
+    while stack.len() != 0 {
+        let (first, last) = stack.pop().unwrap();
+        let mid = partition(vec, first, last);
+        if mid != 0 && first < mid - 1 { stack.push((first, mid - 1)); }
+        if mid + 1 < last { stack.push((mid + 1, last)); }
+    }
 }
 
 #[cfg(test)]
