@@ -1,4 +1,4 @@
-pub fn selection_sort<T: Ord>(vec: &mut [T]) {
+pub fn selection_sort<T: Ord + Copy>(vec: &mut [T]) {
     for i in 0..vec.len() {
         let mut small = i;
         for j in (i + 1)..vec.len() {
@@ -6,7 +6,9 @@ pub fn selection_sort<T: Ord>(vec: &mut [T]) {
                 small = j;
             }
         }
-        if i != small { vec.swap(small, i); };
+        let tmp = vec[i];
+        vec[i] = vec[small];
+        vec[small] = tmp;
         // vec.swap(small, i);
         // TODO: заменить swap
         // TODO: добавить таймер

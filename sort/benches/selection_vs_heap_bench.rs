@@ -23,6 +23,36 @@ fn compare_time_sorts_benchmark(c: &mut Criterion) {
     compare_time(heap_sort, selection_sort, params, c);
 }
 
+fn compare_order_sorts_20_benchmark(c: &mut Criterion) {
+
+    let params = CompareOrdParams {
+        group_name: String::from("heap_vs_selection_20_order"),
+        sort_name1: String::from("heap_sort"),
+        sort_name2: String::from("selection_sort"),
+        size: 20,
+        n_points: 20,
+        sample_size: Some(100),
+        sampling_mode: None,
+    };
+
+    compare_time_order(heap_sort, selection_sort, params, c);
+}
+
+fn compare_order_sorts_100_benchmark(c: &mut Criterion) {
+
+    let params = CompareOrdParams {
+        group_name: String::from("heap_vs_selection_100_order"),
+        sort_name1: String::from("heap_sort"),
+        sort_name2: String::from("selection_sort"),
+        size: 100,
+        n_points: 20,
+        sample_size: Some(100),
+        sampling_mode: None,
+    };
+
+    compare_time_order(heap_sort, selection_sort, params, c);
+}
+
 fn compare_order_sorts_1k_benchmark(c: &mut Criterion) {
 
     let params = CompareOrdParams {
@@ -70,6 +100,8 @@ fn compare_order_sorts_35k_benchmark(c: &mut Criterion) {
 
 criterion_group!(benches,
     compare_time_sorts_benchmark,
+    compare_order_sorts_20_benchmark,
+    compare_order_sorts_100_benchmark,
     compare_order_sorts_1k_benchmark,
     compare_order_sorts_10k_benchmark,
     compare_order_sorts_35k_benchmark
