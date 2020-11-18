@@ -10,7 +10,7 @@ pub(crate) fn sort_determenistic_test<F: Fn(&mut [i64])>(sort: F) {
 
 pub(crate) fn sort_random_test<F: Fn(&mut [i64])>(sort: F) {
     let n_samples = 100;
-    let arr_len = 1000;
+    let arr_len = 100;
     let expected_vec: Vec<i64> = (0i64..arr_len).map(i64::from).collect();
     let mut rng = thread_rng();
 
