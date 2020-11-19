@@ -14,20 +14,17 @@ pub fn shell_sort<T: Ord>(vec: &mut [T]) {
 
 pub fn shell_sort_knutt<T: Ord>(vec: &mut [T]) {
     let len = vec.len();
-    let t = f64::log2(len as f64);
-    for m in (0..t) {
-        let k = h[m];
-        let s = -k;
-        for i in ((k+1)..len) {
-            let x = vec[i];
-            let j = 1 - k;
-            if s == 0 { s = -k; }
-            while x < vec[j] {
-                vec[j + k] = vec[j];
-                j -= k;
-                vec[j + k] = x;
+    let mut gap = 1;
+    while gap < len / 3 { gap = 2 * gap + 1; }
+
+    while gap >= 1 {
+        for i in gap..len {
+            for j in (0..=i).rev().step_by(gap).skip(1) {
+                if vec[j] <= vec[j + gap] { continue; }
+                vec.swap(j, j + gap);
             }
         }
+        gap /= 2;
     }
 }
 
