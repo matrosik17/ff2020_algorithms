@@ -12,7 +12,7 @@ pub fn shell_sort<T: Ord>(vec: &mut [T]) {
     }
 }
 
-pub fn shell_sort_knutt<T: Ord>(vec: &mut [T]) {
+pub fn shell_sort_knuth<T: Ord>(vec: &mut [T]) {
     let len = vec.len();
     let mut gap = 1;
     while gap < len / 3 { gap = 2 * gap + 1; }
@@ -45,13 +45,13 @@ mod tests {
     }
 
     #[test]
-    fn shell_sort_knutt_test() {
-        sort_determenistic_test(shell_sort_knutt);
+    fn shell_sort_knuth_test() {
+        sort_determenistic_test(shell_sort_knuth);
     }
 
     #[test]
-    fn shell_sort_knutt_rand_test() {
-        sort_random_test(shell_sort_knutt);
+    fn shell_sort_knuth_rand_test() {
+        sort_random_test(shell_sort_knuth);
     }
 
 }
