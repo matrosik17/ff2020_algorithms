@@ -1,5 +1,4 @@
 use std::time::{Duration, Instant};
-use std::marker::PhantomData;
 
 use rand::prelude::*;
 use rand::rngs::StdRng;
@@ -29,7 +28,14 @@ where
 pub struct SortParams<T: Ord> {
     pub name: &'static str,
     pub sort: fn(&mut [T]),
-    phantom: PhantomData<T>,
+}
+
+impl<T: Ord> SortParams<T> {
+
+    pub fn new(name: &'static str, sort: fn(&mut [T])) -> Self {
+        Self { name, sort }
+    }
+
 }
 
 
