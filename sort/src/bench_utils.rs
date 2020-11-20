@@ -1,26 +1,44 @@
 use std::time::{Duration, Instant};
+use std::marker::PhantomData;
 
 use rand::prelude::*;
 use rand::rngs::StdRng;
 
 
-fn measure_time<T: Ord, F: Fn(&mut [T])>(sort: F, vec: &mut [T]) -> Duration {
+fn measure_time<T: Ord, F: FnMut(&mut [T])>(mut sort: F, vec: &mut [T]) -> Duration {
     let start = Instant::now();
     sort(vec);
     start.elapsed()
 }
 
-fn measure_avg_time<T, F>(sample_size: usize, sort: F, vec: &[T]) -> Duration
+
+fn measure_avg_time<T, F>(sample_size: usize, mut sort: F, vec: &[T]) -> Duration
 where
     T: Ord + Clone,
-    F: Fn(&mut [T])
+    F: FnMut(&mut [T])
 {
     let mut total_duration = Duration::from_nanos(0);
     for _ in 0..sample_size {
         let mut test_vec = vec.to_vec();
-        total_duration += measure_time(&sort, &mut test_vec);
+        total_duration += measure_time(&mut sort, &mut test_vec);
     }
     total_duration.div_f64(sample_size as f64)
+}
+
+
+pub struct SortParams<T: Ord, F: FnMut(&mut [T])> {
+    pub sort_name: &'static str,
+    pub sort: F,
+    phantom: PhantomData<T>,
+}
+
+
+#[derive(Debug)]
+pub struct SortStats {
+    pub sort_name: &'static str,
+    pub avg_times: Vec<Duration>,
+    pub n_comps: Option<Vec<usize>>,
+    pub n_swaps: Option<Vec<usize>>,
 }
 
 
@@ -33,6 +51,7 @@ pub struct CompareTimeParams {
     seed: u64,
 }
 
+
 #[derive(Debug)]
 pub struct CompareTimeResults {
     pub group_name: &'static str,
@@ -42,6 +61,7 @@ pub struct CompareTimeResults {
     pub avg_times1: Vec<Duration>,
     pub avg_times2: Vec<Duration>,
 }
+
 
 pub fn compare_time<F1, F2>(sort1: F1, sort2: F2,  params: CompareTimeParams) -> CompareTimeResults
 where
@@ -79,6 +99,7 @@ where
 }
 
 
+
 pub struct CompareOrdParams {
     pub group_name: &'static str,
     pub sort_name1: &'static str,
@@ -88,6 +109,7 @@ pub struct CompareOrdParams {
     pub sample_size: usize,
     pub seed: u64,
 }
+
 
 #[derive(Debug)]
 pub struct CompareOrdResults {
@@ -99,6 +121,7 @@ pub struct CompareOrdResults {
     pub avg_times2: Vec<Duration>,
 }
 
+
 fn bubble_sort_iter<T: Ord>(arr: &mut [T]) {
     for i in 0..arr.len()-1 {
         if arr[i] > arr[i+1] {
@@ -107,6 +130,7 @@ fn bubble_sort_iter<T: Ord>(arr: &mut [T]) {
     }
 }
 
+
 fn contra_bubble_sort_iter<T: Ord>(arr: &mut [T]) {
     for i in 0..arr.len()-1 {
         if arr[i] < arr[i+1] {
@@ -114,6 +138,7 @@ fn contra_bubble_sort_iter<T: Ord>(arr: &mut [T]) {
         }
     }
 }
+
 
 fn generate_ord_collection(arr_size: usize, n_ord_points: usize, seed: u64) -> Vec<Vec<i64>> {
     let step_size = (arr_size / n_ord_points) as usize;
@@ -150,10 +175,10 @@ fn generate_ord_collection(arr_size: usize, n_ord_points: usize, seed: u64) -> V
     collection
 }
 
-pub fn compare_time_order<F1, F2>(sort1: F1, sort2: F2, params: CompareOrdParams) -> CompareOrdResults
+pub fn compare_time_order<F1, F2>(mut sort1: F1, mut sort2: F2, params: CompareOrdParams) -> CompareOrdResults
 where
-    F1: Fn(&mut [i64]),
-    F2: Fn(&mut [i64]),
+    F1: FnMut(&mut [i64]),
+    F2: FnMut(&mut [i64]),
 {
     let tests_collection = generate_ord_collection(params.size, params.n_points, params.seed);
     let delta_ord = 1. / params.n_points as f64;
@@ -165,8 +190,8 @@ where
 
     let mut ord = -1.;
     for test_vec in tests_collection.into_iter() {
-        let avg_time1 = measure_avg_time(params.sample_size, &sort1, &test_vec);
-        let avg_time2 = measure_avg_time(params.sample_size, &sort2, &test_vec);
+        let avg_time1 = measure_avg_time(params.sample_size, &mut sort1, &test_vec);
+        let avg_time2 = measure_avg_time(params.sample_size, &mut sort2, &test_vec);
         ord_coeffs.push(ord);
         avg_times1.push(avg_time1);
         avg_times2.push(avg_time2);
@@ -183,10 +208,10 @@ where
     }
 }
 
-pub fn compare_time_order_random<F1, F2>(sort1: F1, sort2: F2, params: CompareOrdParams) -> CompareOrdResults
+pub fn compare_time_order_random<F1, F2>(mut sort1: F1, mut sort2: F2, params: CompareOrdParams) -> CompareOrdResults
 where
-    F1: Fn(&mut [i64]),
-    F2: Fn(&mut [i64]),
+    F1: FnMut(&mut [i64]),
+    F2: FnMut(&mut [i64]),
 {
     let step_size = (params.size / params.n_points) as usize;
     let mut target_vec: Vec<i64> = (0..(params.size as i64)).map(i64::from).collect();
@@ -199,8 +224,8 @@ where
 
     // unordered arrays
     let ord = 0.;
-    let avg_time1 = measure_avg_time(params.sample_size, &sort1, &target_vec);
-    let avg_time2 = measure_avg_time(params.sample_size, &sort2, &target_vec);
+    let avg_time1 = measure_avg_time(params.sample_size, &mut sort1, &target_vec);
+    let avg_time2 = measure_avg_time(params.sample_size, &mut sort2, &target_vec);
 
     ord_coeffs.push(ord);
     avg_times1.push(avg_time1);
@@ -214,8 +239,8 @@ where
             bubble_sort_iter(&mut ord_vec);
         }
 
-        let avg_time1 = measure_avg_time(params.sample_size, &sort1, &ord_vec);
-        let avg_time2 = measure_avg_time(params.sample_size, &sort2, &ord_vec);
+        let avg_time1 = measure_avg_time(params.sample_size, &mut sort1, &ord_vec);
+        let avg_time2 = measure_avg_time(params.sample_size, &mut sort2, &ord_vec);
 
         ord_coeffs.push(ord);
         avg_times1.push(avg_time1);
@@ -229,8 +254,8 @@ where
             contra_bubble_sort_iter(&mut target_vec);
         }
 
-        let avg_time1 = measure_avg_time(params.sample_size, &sort1, &target_vec);
-        let avg_time2 = measure_avg_time(params.sample_size, &sort2, &target_vec);
+        let avg_time1 = measure_avg_time(params.sample_size, &mut sort1, &target_vec);
+        let avg_time2 = measure_avg_time(params.sample_size, &mut sort2, &target_vec);
 
         ord_coeffs.push(ord);
         avg_times1.push(avg_time1);
