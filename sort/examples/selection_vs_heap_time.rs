@@ -20,8 +20,8 @@ fn main() {
     };
     let cmp_time_results = compare_time(cmp_time_params);
 
-    let mut fg1 = Figure::new();
-    let axes = fg1.axes2d()
+    let mut fg = Figure::new();
+    let axes = fg.axes2d()
         .set_title(&cmp_time_results.group_name, &[])
         .set_y_label("Time, mcs", &[])
         .set_x_label("N", &[]);
@@ -33,5 +33,5 @@ fn main() {
             &[Caption(sort_stats.name)]
         );
     }
-    fg1.show().unwrap();
+    fg.show().unwrap();
 }

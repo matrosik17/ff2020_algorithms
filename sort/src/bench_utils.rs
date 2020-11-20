@@ -129,10 +129,9 @@ pub fn compare_time(mut params: CompareTimeParams<i64>) -> CompareTimeResults {
 
 
 
-pub struct CompareOrdParams {
+pub struct CompareOrdParams<T: Ord> {
     pub group_name: &'static str,
-    pub sort_name1: &'static str,
-    pub sort_name2: &'static str,
+    pub sorts: Vec<SortParams<T>>,
     pub size: usize,
     pub n_points: usize,
     pub sample_size: usize,
@@ -143,11 +142,8 @@ pub struct CompareOrdParams {
 #[derive(Debug)]
 pub struct CompareOrdResults {
     pub group_name: &'static str,
-    pub sort_name1: &'static str,
-    pub sort_name2: &'static str,
     pub ord_coeffs: Vec<f64>,
-    pub avg_times1: Vec<Duration>,
-    pub avg_times2: Vec<Duration>,
+    pub stats: Vec<SortStats>,
 }
 
 
@@ -204,99 +200,30 @@ fn generate_ord_collection(arr_size: usize, n_ord_points: usize, seed: u64) -> V
     collection
 }
 
-pub fn compare_time_order<F1, F2>(mut sort1: F1, mut sort2: F2, params: CompareOrdParams) -> CompareOrdResults
-where
-    F1: FnMut(&mut [i64]),
-    F2: FnMut(&mut [i64]),
-{
+pub fn compare_time_order(mut params: CompareOrdParams<i64>) -> CompareOrdResults {
     let tests_collection = generate_ord_collection(params.size, params.n_points, params.seed);
     let delta_ord = 1. / params.n_points as f64;
-    let collection_size = tests_collection.len();
 
-    let mut ord_coeffs = Vec::with_capacity(collection_size);
-    let mut avg_times1 = Vec::with_capacity(collection_size);
-    let mut avg_times2 = Vec::with_capacity(collection_size);
+    let group_name = params.group_name;
+    let ord_coeffs: Vec<f64> = (0..tests_collection.len())
+        .map(|idx| idx as f64 * delta_ord - 1.)
+        .collect();
+    let mut stats: Vec<SortStats> = Vec::with_capacity(tests_collection.len());
 
-    let mut ord = -1.;
-    for test_vec in tests_collection.into_iter() {
-        let avg_time1 = measure_avg_time(params.sample_size, &mut sort1, &test_vec);
-        let avg_time2 = measure_avg_time(params.sample_size, &mut sort2, &test_vec);
-        ord_coeffs.push(ord);
-        avg_times1.push(avg_time1);
-        avg_times2.push(avg_time2);
-        ord += delta_ord;
+    for sort_params in params.sorts.iter_mut() {
+
+        let mut sort_stats = SortStats::with_capacity(sort_params.name, tests_collection.len());
+
+        for test_vec in tests_collection.iter() {
+            let avg_time = measure_avg_time(params.size, &mut sort_params.sort, &test_vec);
+            sort_stats.update_time(avg_time);
+        }
+        stats.push(sort_stats);
     }
 
     CompareOrdResults {
-        group_name: params.group_name,
-        sort_name1: params.sort_name1,
-        sort_name2: params.sort_name2,
+        group_name,
         ord_coeffs,
-        avg_times1,
-        avg_times2,
-    }
-}
-
-pub fn compare_time_order_random<F1, F2>(mut sort1: F1, mut sort2: F2, params: CompareOrdParams) -> CompareOrdResults
-where
-    F1: FnMut(&mut [i64]),
-    F2: FnMut(&mut [i64]),
-{
-    let step_size = (params.size / params.n_points) as usize;
-    let mut target_vec: Vec<i64> = (0..(params.size as i64)).map(i64::from).collect();
-    let mut rng = thread_rng();
-    target_vec.shuffle(&mut rng);
-
-    let mut ord_coeffs = Vec::with_capacity(2 * params.n_points - 1);
-    let mut avg_times1 = Vec::with_capacity(2 * params.n_points - 1);
-    let mut avg_times2 = Vec::with_capacity(2 * params.n_points - 1);
-
-    // unordered arrays
-    let ord = 0.;
-    let avg_time1 = measure_avg_time(params.sample_size, &mut sort1, &target_vec);
-    let avg_time2 = measure_avg_time(params.sample_size, &mut sort2, &target_vec);
-
-    ord_coeffs.push(ord);
-    avg_times1.push(avg_time1);
-    avg_times2.push(avg_time2);
-
-    // ordered arrays
-    let mut ord_vec = target_vec.clone();
-    for step in (step_size..=(params.size as usize)).step_by(step_size) {
-        let ord = step as f64 / params.size as f64;
-        for _ in 0..step_size {
-            bubble_sort_iter(&mut ord_vec);
-        }
-
-        let avg_time1 = measure_avg_time(params.sample_size, &mut sort1, &ord_vec);
-        let avg_time2 = measure_avg_time(params.sample_size, &mut sort2, &ord_vec);
-
-        ord_coeffs.push(ord);
-        avg_times1.push(avg_time1);
-        avg_times2.push(avg_time2);
-    }
-
-    // contra ordered
-    for step in (step_size..=(params.size as usize)).step_by(step_size) {
-        let ord = - (step as f64 / params.size as f64);
-        for _ in 0..step_size {
-            contra_bubble_sort_iter(&mut target_vec);
-        }
-
-        let avg_time1 = measure_avg_time(params.sample_size, &mut sort1, &target_vec);
-        let avg_time2 = measure_avg_time(params.sample_size, &mut sort2, &target_vec);
-
-        ord_coeffs.push(ord);
-        avg_times1.push(avg_time1);
-        avg_times2.push(avg_time2);
-    }
-
-    CompareOrdResults {
-        group_name: params.group_name,
-        sort_name1: params.sort_name1,
-        sort_name2: params.sort_name2,
-        ord_coeffs,
-        avg_times1,
-        avg_times2,
+        stats,
     }
 }
