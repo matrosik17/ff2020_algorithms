@@ -26,76 +26,99 @@ where
 }
 
 
-pub struct SortParams<T: Ord, F: FnMut(&mut [T])> {
-    pub sort_name: &'static str,
-    pub sort: F,
+pub struct SortParams<T: Ord> {
+    pub name: &'static str,
+    pub sort: fn(&mut [T]),
     phantom: PhantomData<T>,
 }
 
 
 #[derive(Debug)]
 pub struct SortStats {
-    pub sort_name: &'static str,
+    pub name: &'static str,
     pub avg_times: Vec<Duration>,
     pub n_comps: Option<Vec<usize>>,
     pub n_swaps: Option<Vec<usize>>,
 }
 
+impl SortStats {
 
-pub struct CompareTimeParams {
+    pub fn with_capacity(name: &'static str, size: usize) -> Self {
+        Self {
+            name,
+            avg_times: Vec::with_capacity(size),
+            n_comps: None,
+            n_swaps: None
+        }
+    }
+
+    pub fn update_time(&mut self, avg_time: Duration) {
+        self.avg_times.push(avg_time);
+    }
+
+    pub fn update_comps(&mut self, n_comps: usize) {
+        if let Some(comps) = &mut self.n_comps {
+            comps.push(n_comps);
+        } else {
+            let mut comps = Vec::with_capacity(self.avg_times.len());
+            comps.push(n_comps);
+            self.n_comps = Some(comps);
+        }
+    }
+
+    pub fn update_swaps(&mut self, n_swaps: usize) {
+        if let Some(swaps) = &mut self.n_swaps {
+            swaps.push(n_swaps);
+        } else {
+            let mut swaps = Vec::with_capacity(self.avg_times.len());
+            swaps.push(n_swaps);
+            self.n_swaps = Some(swaps);
+        }
+    }
+
+}
+
+
+pub struct CompareTimeParams<T: Ord> {
     pub group_name: &'static str,
-    pub sort_name1: &'static str,
-    pub sort_name2: &'static str,
+    pub sorts: Vec<SortParams<T>>,
     pub sizes: Vec<usize>,
     pub sample_size: usize,
-    seed: u64,
+    pub seed: u64,
 }
 
 
 #[derive(Debug)]
 pub struct CompareTimeResults {
     pub group_name: &'static str,
-    pub sort_name1: &'static str,
-    pub sort_name2: &'static str,
     pub sizes: Vec<usize>,
-    pub avg_times1: Vec<Duration>,
-    pub avg_times2: Vec<Duration>,
+    pub stats: Vec<SortStats>,
 }
 
 
-pub fn compare_time<F1, F2>(sort1: F1, sort2: F2,  params: CompareTimeParams) -> CompareTimeResults
-where
-    F1: Fn(&mut [i64]),
-    F2: Fn(&mut [i64])
-{
+pub fn compare_time(mut params: CompareTimeParams<i64>) -> CompareTimeResults {
     let max_arr_len = *params.sizes.last().unwrap() as i64;
     let mut target_vec: Vec<i64> = (0..max_arr_len).map(i64::from).collect();
-    // let mut rng = thread_rng();
     let mut rng = StdRng::seed_from_u64(params.seed);
     target_vec.shuffle(&mut rng);
 
-    let mut avg_times1 = Vec::with_capacity(params.sizes.len());
-    let mut avg_times2 = Vec::with_capacity(params.sizes.len());
+    let group_name = params.group_name;
+    let sizes = params.sizes;
+    let mut stats: Vec<SortStats> = Vec::with_capacity(params.sorts.len());
 
-    for size in params.sizes.iter() {
-        let size = *size as usize;
+    for sort_params in params.sorts.iter_mut() {
 
-        let avg_time1 = measure_avg_time(params.sample_size, &sort1, &target_vec[..size]);
-        avg_times1.push(avg_time1);
+        let mut sort_stats = SortStats::with_capacity(sort_params.name, sizes.len());
 
-        let avg_time2 = measure_avg_time(params.sample_size, &sort2, &target_vec[..size]);
-        avg_times2.push(avg_time2);
-
+        for size in sizes.iter() {
+            let size = *size as usize;
+            let avg_time = measure_avg_time(params.sample_size, &mut sort_params.sort, &target_vec[..size]);
+            sort_stats.update_time(avg_time);
+        }
+        stats.push(sort_stats);
     }
 
-    CompareTimeResults {
-        group_name: params.group_name,
-        sort_name1: params.sort_name1,
-        sort_name2: params.sort_name2,
-        sizes: params.sizes,
-        avg_times1,
-        avg_times2,
-    }
+    CompareTimeResults { group_name, sizes, stats }
 }
 
 
