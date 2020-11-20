@@ -39,7 +39,6 @@ pub struct SortStats {
     pub name: &'static str,
     pub avg_times: Vec<Duration>,
     pub n_comps: Option<Vec<usize>>,
-    pub n_swaps: Option<Vec<usize>>,
 }
 
 impl SortStats {
@@ -49,7 +48,6 @@ impl SortStats {
             name,
             avg_times: Vec::with_capacity(size),
             n_comps: None,
-            n_swaps: None
         }
     }
 
@@ -64,16 +62,6 @@ impl SortStats {
             let mut comps = Vec::with_capacity(self.avg_times.len());
             comps.push(n_comps);
             self.n_comps = Some(comps);
-        }
-    }
-
-    pub fn update_swaps(&mut self, n_swaps: usize) {
-        if let Some(swaps) = &mut self.n_swaps {
-            swaps.push(n_swaps);
-        } else {
-            let mut swaps = Vec::with_capacity(self.avg_times.len());
-            swaps.push(n_swaps);
-            self.n_swaps = Some(swaps);
         }
     }
 

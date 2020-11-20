@@ -14,10 +14,10 @@ fn main() {
             SortParams::new("Selecton sort", selection_sort),
             // SortParams::new("Heap sort", heap_sort),
         ],
-        size: 5_000,
-        n_points: 10,
+        size: 30_000,
+        n_points: 40,
         sample_size: 10,
-        seed: 42,
+        seed: 142,
     };
     let tests_collection = generate_ord_collection(
         cmp_ord_params.size,

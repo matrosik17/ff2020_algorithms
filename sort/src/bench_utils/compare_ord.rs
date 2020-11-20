@@ -74,6 +74,7 @@ pub fn generate_ord_collection(arr_size: usize, n_ord_points: usize, seed: u64) 
     collection
 }
 
+
 pub fn compare_time_order(tests_collection: &[Vec<i64>], mut params: CompareOrdParams<i64>) -> CompareOrdResults {
     let delta_ord = 1. / params.n_points as f64;
 
@@ -88,7 +89,7 @@ pub fn compare_time_order(tests_collection: &[Vec<i64>], mut params: CompareOrdP
         let mut sort_stats = SortStats::with_capacity(sort_params.name, tests_collection.len());
 
         for test_vec in tests_collection.iter() {
-            let avg_time = measure_avg_time(params.size, &mut sort_params.sort, &test_vec);
+            let avg_time = measure_avg_time(params.sample_size, &mut sort_params.sort, &test_vec);
             sort_stats.update_time(avg_time);
         }
         stats.push(sort_stats);
