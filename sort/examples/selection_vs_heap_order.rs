@@ -13,12 +13,17 @@ fn main() {
             SortParams::new("Selecton sort", selection_sort),
             SortParams::new("Heap sort", heap_sort),
         ],
-        size: 1_000,
+        size: 100,
         n_points: 20,
         sample_size: 100,
         seed: 42,
     };
-    let cmp_ord_results = compare_time_order(cmp_ord_params);
+    let tests_collection = generate_ord_collection(
+        cmp_ord_params.size,
+        cmp_ord_params.n_points,
+        cmp_ord_params.seed
+    );
+    let cmp_ord_results = compare_time_order(&tests_collection, cmp_ord_params);
     // println!("{:?}", cmp_ord_results);
 
     let mut fg = Figure::new();

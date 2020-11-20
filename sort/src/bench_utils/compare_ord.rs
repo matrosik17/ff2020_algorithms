@@ -3,6 +3,7 @@ use rand::rngs::StdRng;
 
 use super::common::{SortParams, SortStats, measure_avg_time};
 
+
 pub struct CompareOrdParams<T: Ord> {
     pub group_name: &'static str,
     pub sorts: Vec<SortParams<T>>,
@@ -39,7 +40,7 @@ fn contra_bubble_sort_iter<T: Ord>(arr: &mut [T]) {
 }
 
 
-fn generate_ord_collection(arr_size: usize, n_ord_points: usize, seed: u64) -> Vec<Vec<i64>> {
+pub fn generate_ord_collection(arr_size: usize, n_ord_points: usize, seed: u64) -> Vec<Vec<i64>> {
     let step_size = (arr_size / n_ord_points) as usize;
     let mut rand_vec: Vec<i64> = (0..(arr_size as i64)).collect();
     let mut rng = StdRng::seed_from_u64(seed);
@@ -73,8 +74,7 @@ fn generate_ord_collection(arr_size: usize, n_ord_points: usize, seed: u64) -> V
     collection
 }
 
-pub fn compare_time_order(mut params: CompareOrdParams<i64>) -> CompareOrdResults {
-    let tests_collection = generate_ord_collection(params.size, params.n_points, params.seed);
+pub fn compare_time_order(tests_collection: &[Vec<i64>], mut params: CompareOrdParams<i64>) -> CompareOrdResults {
     let delta_ord = 1. / params.n_points as f64;
 
     let group_name = params.group_name;
