@@ -1,4 +1,4 @@
-pub fn selection_sort<T: Ord + Copy>(vec: &mut [T]) {
+pub fn selection_sort<T: Ord>(vec: &mut [T]) {
     for i in 0..vec.len() {
         let mut small = i;
         for j in (i + 1)..vec.len() {
@@ -6,9 +6,28 @@ pub fn selection_sort<T: Ord + Copy>(vec: &mut [T]) {
                 small = j;
             }
         }
-        vec.swap(small, i);
+        if i != small { vec.swap(small, i); }
     }
 }
+
+
+pub fn selection_sort_count_swaps<T: Ord>(vec: &mut [T]) -> usize {
+    let mut swaps = 0;
+    for i in 0..vec.len() {
+        let mut small = i;
+        for j in (i + 1)..vec.len() {
+            if vec[j] < vec[small] {
+                small = j;
+            }
+        }
+        if i != small {
+            vec.swap(small, i);
+            swaps += 1;
+        }
+    }
+    swaps
+}
+
 
 #[cfg(test)]
 mod tests {

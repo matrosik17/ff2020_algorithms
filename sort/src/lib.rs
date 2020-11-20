@@ -1,7 +1,7 @@
-mod selection_sort;
-mod heap_sort;
-mod qsort;
-mod shell_sort;
+pub mod selection_sort;
+pub mod heap_sort;
+pub mod qsort;
+pub mod shell_sort;
 
 #[cfg(test)]
 mod test_utils;
