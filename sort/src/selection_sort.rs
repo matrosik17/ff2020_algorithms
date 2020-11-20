@@ -6,12 +6,7 @@ pub fn selection_sort<T: Ord + Copy>(vec: &mut [T]) {
                 small = j;
             }
         }
-        let tmp = vec[i];
-        vec[i] = vec[small];
-        vec[small] = tmp;
-        // vec.swap(small, i);
-        // TODO: заменить swap
-        // TODO: добавить таймер
+        vec.swap(small, i);
     }
 }
 
