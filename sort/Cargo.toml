@@ -19,8 +19,8 @@ name = "selection_vs_heap_time_seq"
 path = "examples/selection_vs_heap/time_seq.rs"
 
 [[example]]
-name = "selection_vs_heap_time_order"
-path = "examples/selection_vs_heap/time_order.rs"
+name = "selection_vs_heap_time_ord"
+path = "examples/selection_vs_heap/time_ord.rs"
 
 [[example]]
 name = "shell_comps_seq"
