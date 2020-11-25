@@ -15,12 +15,12 @@ criterion = "0.3"
 
 
 [[example]]
-name = "selection_vs_heap_time"
-path = "examples/selection_vs_heap/time.rs"
+name = "selection_vs_heap_time_seq"
+path = "examples/selection_vs_heap/time_seq.rs"
 
 [[example]]
-name = "selection_vs_heap_order"
-path = "examples/selection_vs_heap/order.rs"
+name = "selection_vs_heap_time_order"
+path = "examples/selection_vs_heap/time_order.rs"
 
 # [[example]]
 # name = "selection_vs_heap_order"
