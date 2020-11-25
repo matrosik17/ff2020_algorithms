@@ -8,7 +8,7 @@ use sort::bench_utils::{
     TimeSeqParams,
     SortParams,
     generate_seq,
-    compare_time
+    compare_time_seq
 };
 
 
@@ -26,7 +26,7 @@ fn main() {
         sizes: (5..arr_size).step_by(50).collect(),
         sample_size: 200,
     };
-    let cmp_time_results = compare_time(&target_vec, cmp_time_params);
+    let cmp_time_results = compare_time_seq(&target_vec, cmp_time_params);
 
     let mut fg = Figure::new();
     let axes = fg.axes2d()

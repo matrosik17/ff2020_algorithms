@@ -18,7 +18,7 @@ pub struct TimeSeqResults {
 }
 
 
-pub fn compare_time(target_vec: &[i64], mut params: TimeSeqParams) -> TimeSeqResults {
+pub fn compare_time_seq(target_vec: &[i64], mut params: TimeSeqParams) -> TimeSeqResults {
     let group_name = params.group_name;
     let sizes = params.sizes;
     let mut stats: Vec<SortStats<Duration>> = Vec::with_capacity(params.sorts.len());
