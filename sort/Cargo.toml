@@ -30,6 +30,14 @@ path = "examples/shell_sorts/comps_seq.rs"
 name = "shell_comps_ord"
 path = "examples/shell_sorts/comps_ord.rs"
 
+[[example]]
+name = "qsorts_time_seq"
+path = "examples/qsorts/time_seq.rs"
+
+[[example]]
+name = "qsorts_time_ord"
+path = "examples/qsorts/time_ord.rs"
+
 
 [[bench]]
 name = "heap_sort_bench"
