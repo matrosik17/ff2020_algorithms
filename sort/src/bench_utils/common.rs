@@ -1,5 +1,7 @@
 use std::time::{Duration, Instant};
 
+use super::count_wrapper::Counter;
+
 
 fn measure_time<T: Ord, F: FnMut(&mut [T])>(mut sort: F, vec: &mut [T]) -> Duration {
     let start = Instant::now();
@@ -19,6 +21,19 @@ where
         total_duration += measure_time(&mut sort, &mut test_vec);
     }
     total_duration.div_f64(sample_size as f64)
+}
+
+
+pub fn count_comps<T, F>(mut sort: F, vec: &[T]) -> usize
+where
+    T: Ord + Clone,
+    F: FnMut(&mut [Counter<T>])
+{
+    let mut counted_vec: Vec<Counter<T>> = vec.iter()
+        .map(|x| Counter::new(x.clone()))
+        .collect();
+    sort(&mut counted_vec);
+    counted_vec.iter().map(|x| x.get_comps()).sum::<usize>() / 2
 }
 
 
