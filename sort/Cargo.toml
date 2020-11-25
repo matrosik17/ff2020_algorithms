@@ -14,6 +14,19 @@ gnuplot = "0.0.37"
 criterion = "0.3"
 
 
+[[example]]
+name = "selection_vs_heap_time"
+path = "examples/selection_vs_heap/time.rs"
+
+[[example]]
+name = "selection_vs_heap_order"
+path = "examples/selection_vs_heap/order.rs"
+
+# [[example]]
+# name = "selection_vs_heap_order"
+# path = "examples/selection_vs_heap/order.rs"
+
+
 [[bench]]
 name = "heap_sort_bench"
 harness = false
