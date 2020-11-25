@@ -18,7 +18,7 @@ pub struct CompOrdResults {
 
 pub fn compare_comps_order(tests_collection: &[Vec<i64>], mut params: CompOrdParams) -> CompOrdResults {
     let size = tests_collection.len();
-    let delta_ord = 1. / size as f64;
+    let delta_ord = 2. / size as f64;
 
     let group_name = params.group_name;
     let ord_coeffs: Vec<f64> = (0..size)

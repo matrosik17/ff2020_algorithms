@@ -22,9 +22,13 @@ path = "examples/selection_vs_heap/time_seq.rs"
 name = "selection_vs_heap_time_order"
 path = "examples/selection_vs_heap/time_order.rs"
 
-# [[example]]
-# name = "selection_vs_heap_order"
-# path = "examples/selection_vs_heap/order.rs"
+[[example]]
+name = "shell_comps_seq"
+path = "examples/shell_sorts/comps_seq.rs"
+
+[[example]]
+name = "shell_comps_ord"
+path = "examples/shell_sorts/comps_ord.rs"
 
 
 [[bench]]
