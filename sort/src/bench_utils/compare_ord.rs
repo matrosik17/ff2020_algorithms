@@ -3,7 +3,7 @@ use std::time::Duration;
 use super::common::{SortParams, SortStats, measure_avg_time};
 
 
-pub struct CompareOrdParams {
+pub struct TimeOrdParams {
     pub group_name: &'static str,
     pub sorts: Vec<SortParams<i64>>,
     pub sample_size: usize,
@@ -11,14 +11,14 @@ pub struct CompareOrdParams {
 
 
 #[derive(Debug)]
-pub struct CompareOrdResults {
+pub struct TimeOrdResults {
     pub group_name: &'static str,
     pub ord_coeffs: Vec<f64>,
     pub stats: Vec<SortStats<Duration>>,
 }
 
 
-pub fn compare_time_order(tests_collection: &[Vec<i64>], mut params: CompareOrdParams) -> CompareOrdResults {
+pub fn compare_time_order(tests_collection: &[Vec<i64>], mut params: TimeOrdParams) -> TimeOrdResults {
     let size = tests_collection.len();
     let delta_ord = 1. / size as f64;
 
@@ -39,7 +39,7 @@ pub fn compare_time_order(tests_collection: &[Vec<i64>], mut params: CompareOrdP
         stats.push(sort_stats);
     }
 
-    CompareOrdResults {
+    TimeOrdResults {
         group_name,
         ord_coeffs,
         stats,

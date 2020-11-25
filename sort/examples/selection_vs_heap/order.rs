@@ -12,7 +12,7 @@ fn main() {
     let n_points = 40;
     let seed = 42;
 
-    let cmp_ord_params = CompareOrdParams {
+    let cmp_ord_params = TimeOrdParams {
         group_name: "Selection Ord",
         sorts: vec![
             SortParams::new("Selecton sort", selection_sort),

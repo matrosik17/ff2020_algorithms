@@ -5,7 +5,7 @@ use gnuplot::{Figure, Caption, AxesCommon};
 
 use sort::{selection_sort, heap_sort};
 use sort::bench_utils::{
-    CompareTimeParams,
+    TimeSeqParams,
     SortParams,
     generate_seq,
     compare_time
@@ -17,7 +17,7 @@ fn main() {
     let seed = 42;
     let target_vec = generate_seq(arr_size, seed);
 
-    let cmp_time_params = CompareTimeParams {
+    let cmp_time_params = TimeSeqParams {
         group_name: "Selection vs Heap",
         sorts: vec![
             SortParams::new("Selecton sort", selection_sort),

@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use super::common::{SortParams, SortStats, measure_avg_time};
 
-pub struct CompareTimeParams {
+pub struct TimeSeqParams {
     pub group_name: &'static str,
     pub sorts: Vec<SortParams<i64>>,
     pub sizes: Vec<usize>,
@@ -11,14 +11,14 @@ pub struct CompareTimeParams {
 
 
 #[derive(Debug)]
-pub struct CompareTimeResults {
+pub struct TimeSeqResults {
     pub group_name: &'static str,
     pub sizes: Vec<usize>,
     pub stats: Vec<SortStats<Duration>>,
 }
 
 
-pub fn compare_time(target_vec: &[i64], mut params: CompareTimeParams) -> CompareTimeResults {
+pub fn compare_time(target_vec: &[i64], mut params: TimeSeqParams) -> TimeSeqResults {
     let group_name = params.group_name;
     let sizes = params.sizes;
     let mut stats: Vec<SortStats<Duration>> = Vec::with_capacity(params.sorts.len());
@@ -35,5 +35,5 @@ pub fn compare_time(target_vec: &[i64], mut params: CompareTimeParams) -> Compar
         stats.push(sort_stats);
     }
 
-    CompareTimeResults { group_name, sizes, stats }
+    TimeSeqResults { group_name, sizes, stats }
 }
