@@ -8,22 +8,20 @@ use sort::selection_sort::selection_sort_count_swaps;
 use sort::bench_utils::*;
 
 fn main() {
+    let size = 30_000;
+    let n_points = 40;
+    let seed = 42;
+
     let cmp_ord_params = CompareOrdParams {
         group_name: "Selection Ord",
         sorts: vec![
             SortParams::new("Selecton sort", selection_sort),
             // SortParams::new("Heap sort", heap_sort),
         ],
-        size: 30_000,
-        n_points: 40,
         sample_size: 10,
-        seed: 142,
     };
-    let tests_collection = generate_ord_collection(
-        cmp_ord_params.size,
-        cmp_ord_params.n_points,
-        cmp_ord_params.seed
-    );
+
+    let tests_collection = generate_ord_collection(size, n_points, seed);
     let cmp_ord_results = compare_time_order(&tests_collection, cmp_ord_params);
 
     let swaps: Vec<usize> = tests_collection.iter()

@@ -2,6 +2,14 @@ use rand::prelude::*;
 use rand::rngs::StdRng;
 
 
+pub fn generate_seq(arr_size: usize, seed: u64) -> Vec<i64> {
+    let mut rand_vec: Vec<i64> = (0..(arr_size as i64)).collect();
+    let mut rng = StdRng::seed_from_u64(seed);
+    rand_vec.shuffle(&mut rng);
+    rand_vec
+}
+
+
 fn bubble_sort_iter<T: Ord>(arr: &mut [T]) {
     for i in 0..arr.len()-1 {
         if arr[i] > arr[i+1] {
@@ -22,9 +30,7 @@ fn contra_bubble_sort_iter<T: Ord>(arr: &mut [T]) {
 
 pub fn generate_ord_collection(arr_size: usize, n_ord_points: usize, seed: u64) -> Vec<Vec<i64>> {
     let step_size = (arr_size / n_ord_points) as usize;
-    let mut rand_vec: Vec<i64> = (0..(arr_size as i64)).collect();
-    let mut rng = StdRng::seed_from_u64(seed);
-    rand_vec.shuffle(&mut rng);
+    let rand_vec = generate_seq(arr_size, seed);
 
     // ordered collection
     let mut ordered_collection = Vec::with_capacity(n_ord_points + 1);
