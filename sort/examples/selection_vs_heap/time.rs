@@ -29,7 +29,7 @@ fn main() {
     for sort_stats in cmp_time_results.stats {
         axes.lines(
             &cmp_time_results.sizes,
-            &mut sort_stats.avg_times.iter().map(|x| x.as_micros() as f64),
+            &mut sort_stats.values.iter().map(|x| x.as_micros() as f64),
             &[Caption(sort_stats.name)]
         );
     }

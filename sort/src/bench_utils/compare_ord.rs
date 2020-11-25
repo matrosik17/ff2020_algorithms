@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use super::common::{SortParams, SortStats, measure_avg_time};
 
 
@@ -15,7 +17,7 @@ pub struct CompareOrdParams<T: Ord> {
 pub struct CompareOrdResults {
     pub group_name: &'static str,
     pub ord_coeffs: Vec<f64>,
-    pub stats: Vec<SortStats>,
+    pub stats: Vec<SortStats<Duration>>,
 }
 
 
@@ -26,7 +28,7 @@ pub fn compare_time_order(tests_collection: &[Vec<i64>], mut params: CompareOrdP
     let ord_coeffs: Vec<f64> = (0..tests_collection.len())
         .map(|idx| idx as f64 * delta_ord - 1.)
         .collect();
-    let mut stats: Vec<SortStats> = Vec::with_capacity(tests_collection.len());
+    let mut stats: Vec<SortStats<Duration>> = Vec::with_capacity(tests_collection.len());
 
     for sort_params in params.sorts.iter_mut() {
 
@@ -34,7 +36,7 @@ pub fn compare_time_order(tests_collection: &[Vec<i64>], mut params: CompareOrdP
 
         for test_vec in tests_collection.iter() {
             let avg_time = measure_avg_time(params.sample_size, &mut sort_params.sort, &test_vec);
-            sort_stats.update_time(avg_time);
+            sort_stats.update(avg_time);
         }
         stats.push(sort_stats);
     }

@@ -61,7 +61,7 @@ fn main() {
         axes
         .lines(
             &cmp_ord_results.ord_coeffs,
-            &mut sort_stats.avg_times.iter().map(|x| x.as_secs_f64()),
+            &mut sort_stats.values.iter().map(|x| x.as_secs_f64()),
             &[PlotOption::Caption(sort_stats.name)]
         );
     }

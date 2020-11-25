@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use rand::prelude::*;
 use rand::rngs::StdRng;
 
@@ -16,7 +18,7 @@ pub struct CompareTimeParams<T: Ord> {
 pub struct CompareTimeResults {
     pub group_name: &'static str,
     pub sizes: Vec<usize>,
-    pub stats: Vec<SortStats>,
+    pub stats: Vec<SortStats<Duration>>,
 }
 
 
@@ -28,7 +30,7 @@ pub fn compare_time(mut params: CompareTimeParams<i64>) -> CompareTimeResults {
 
     let group_name = params.group_name;
     let sizes = params.sizes;
-    let mut stats: Vec<SortStats> = Vec::with_capacity(params.sorts.len());
+    let mut stats: Vec<SortStats<Duration>> = Vec::with_capacity(params.sorts.len());
 
     for sort_params in params.sorts.iter_mut() {
 
@@ -37,7 +39,7 @@ pub fn compare_time(mut params: CompareTimeParams<i64>) -> CompareTimeResults {
         for size in sizes.iter() {
             let size = *size as usize;
             let avg_time = measure_avg_time(params.sample_size, &mut sort_params.sort, &target_vec[..size]);
-            sort_stats.update_time(avg_time);
+            sort_stats.update(avg_time);
         }
         stats.push(sort_stats);
     }

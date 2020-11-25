@@ -35,34 +35,29 @@ impl<T: Ord> SortParams<T> {
 
 
 #[derive(Debug)]
-pub struct SortStats {
+pub struct SortStats<T> {
     pub name: &'static str,
-    pub avg_times: Vec<Duration>,
-    pub n_comps: Option<Vec<usize>>,
+    pub values: Vec<T>,
 }
 
-impl SortStats {
+impl<T> SortStats<T> {
+
+    pub fn new(name: &'static str) -> Self {
+        Self {
+            name,
+            values: Vec::new(),
+        }
+    }
 
     pub fn with_capacity(name: &'static str, size: usize) -> Self {
         Self {
             name,
-            avg_times: Vec::with_capacity(size),
-            n_comps: None,
+            values: Vec::with_capacity(size),
         }
     }
 
-    pub fn update_time(&mut self, avg_time: Duration) {
-        self.avg_times.push(avg_time);
-    }
-
-    pub fn update_comps(&mut self, n_comps: usize) {
-        if let Some(comps) = &mut self.n_comps {
-            comps.push(n_comps);
-        } else {
-            let mut comps = Vec::with_capacity(self.avg_times.len());
-            comps.push(n_comps);
-            self.n_comps = Some(comps);
-        }
+    pub fn update(&mut self, value: T) {
+        self.values.push(value);
     }
 
 }
