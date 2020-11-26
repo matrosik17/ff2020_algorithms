@@ -4,4 +4,5 @@ members = [
 	"substring_search",
 	"sort",
 	"salesman_problem",
+	"trees",
 ]
