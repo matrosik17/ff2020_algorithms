@@ -31,6 +31,10 @@ name = "shell_comps_ord"
 path = "examples/shell_sorts/comps_ord.rs"
 
 [[example]]
+name = "shell_time_seq"
+path = "examples/shell_sorts/time_seq.rs"
+
+[[example]]
 name = "qsorts_time_seq"
 path = "examples/qsorts/time_seq.rs"
 

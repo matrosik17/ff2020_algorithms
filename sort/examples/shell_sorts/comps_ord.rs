@@ -12,8 +12,8 @@ use sort::bench_utils::{
 };
 
 fn main() {
-    let size = 500;
-    let n_points = 40;
+    let size = 2_000;
+    let n_points = 5;
     let seed = 42;
 
     let cmp_comp_ord_params = CompOrdParams {
