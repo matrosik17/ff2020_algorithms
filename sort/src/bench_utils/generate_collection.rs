@@ -20,7 +20,7 @@ fn bubble_sort_iter<T: Ord>(arr: &mut [T]) {
 
 
 fn contra_bubble_sort_iter<T: Ord>(arr: &mut [T]) {
-    for i in 0..arr.len()-1 {
+    for i in (0..arr.len()-1) {
         if arr[i] < arr[i+1] {
             arr.swap(i, i+1);
         }
@@ -36,7 +36,7 @@ pub fn generate_ord_collection(arr_size: usize, n_ord_points: usize, seed: u64) 
     let mut ordered_collection = Vec::with_capacity(n_ord_points + 1);
     let mut ord_vec = rand_vec.clone();
     ordered_collection.push(ord_vec.clone());
-    for _ in 0..=n_ord_points {
+    for _ in 0..n_ord_points {
         for _ in 0..step_size {
             bubble_sort_iter(&mut ord_vec);
         }

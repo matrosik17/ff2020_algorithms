@@ -20,7 +20,7 @@ pub struct TimeOrdResults {
 
 pub fn compare_time_order(tests_collection: &[Vec<i64>], mut params: TimeOrdParams) -> TimeOrdResults {
     let size = tests_collection.len();
-    let delta_ord = 2. / size as f64;
+    let delta_ord = 2. / (size - 1) as f64;
 
     let group_name = params.group_name;
     let ord_coeffs: Vec<f64> = (0..size)
