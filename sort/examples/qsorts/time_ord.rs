@@ -7,8 +7,8 @@ use sort::{qsort, qsort_iterative};
 use sort::bench_utils::*;
 
 fn main() {
-    let size = 1_000;
-    let n_points = 40;
+    let size = 100_000;
+    let n_points = 20;
     let seed = 42;
 
     let cmp_ord_params = TimeOrdParams {

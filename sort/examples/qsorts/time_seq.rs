@@ -1,7 +1,7 @@
 extern crate gnuplot;
 extern crate sort;
 
-use gnuplot::{Figure, Caption, AxesCommon};
+use gnuplot::{Figure, AxesCommon, PlotOption, Caption, DashType, XAxis, YAxis};
 
 use sort::{qsort, qsort_iterative};
 use sort::bench_utils::{
@@ -13,7 +13,7 @@ use sort::bench_utils::{
 
 
 fn main() {
-    let arr_size = 500_000;
+    let arr_size = 1_000;
     let seed = 42;
     let target_vec = generate_seq(arr_size, seed);
 
@@ -23,16 +23,31 @@ fn main() {
             SortParams::new("Normal", qsort),
             SortParams::new("Iterative", qsort_iterative),
         ],
-        sizes: (5..arr_size).step_by(10_000).collect(),
-        sample_size: 10,
+        sizes: (5..arr_size).step_by(10).collect(),
+        sample_size: 500,
     };
     let cmp_time_results = compare_time_seq(&target_vec, cmp_time_params);
+    let n_logn: Vec<f64> = cmp_time_results.sizes.iter().map(|n| {
+            let n = *n as f64;
+            n * n.log2()
+        })
+        .collect();
 
     let mut fg = Figure::new();
     let axes = fg.axes2d()
         .set_title(&cmp_time_results.group_name, &[])
         .set_y_label("Time, s", &[])
         .set_x_label("N", &[]);
+
+    axes.lines(
+        &cmp_time_results.sizes,
+        &n_logn,
+        &[
+            PlotOption::Caption("N log(N)"),
+            PlotOption::LineStyle(DashType::Dash),
+            PlotOption::Axes(XAxis::X1, YAxis::Y2),
+        ]
+    );
 
     for sort_stats in cmp_time_results.stats {
         axes.lines(

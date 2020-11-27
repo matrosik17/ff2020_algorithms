@@ -1,6 +1,10 @@
 // TODO: доказать эквивалентность версии с семинара
 // TODO2: проанализировать число сравнений и swap'ов
 fn partition<T: Ord>(vec: &mut [T], first: usize, last: usize) -> usize {
+    {
+        let mid = first + (last - first) / 2;
+        vec.swap(last, mid);
+    };
     let mut i = first;
 
     for j in first..last {

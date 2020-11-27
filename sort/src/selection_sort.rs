@@ -1,12 +1,21 @@
+// TODOL: степень отсортированности
+// TODO: избавиться от итератора
+// TODO: реализовать поиск минимума на итераторах
 pub fn selection_sort<T: Ord>(vec: &mut [T]) {
     for i in 0..vec.len() {
-        let mut small = i;
-        for j in (i + 1)..vec.len() {
-            if vec[j] < vec[small] {
-                small = j;
-            }
+        // let mut small = i;
+        // for j in (i + 1)..vec.len() {
+        //     if vec[j] < vec[small] {
+        //         small = j;
+        //     }
+        // }
+        let min = vec.iter()
+            .enumerate()
+            .skip(i)
+            .min_by(|(_, val1), (_, val2)| val1.cmp(val2));
+        if let Some((small, _)) = min {
+            if i != small { vec.swap(small, i); }
         }
-        if i != small { vec.swap(small, i); }
     }
 }
 
