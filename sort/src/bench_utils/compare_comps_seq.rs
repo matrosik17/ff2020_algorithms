@@ -6,7 +6,6 @@ pub struct CompSeqParams {
     pub group_name: &'static str,
     pub sorts: Vec<SortParams<Counter<i64>>>,
     pub sizes: Vec<usize>,
-    pub sample_size: usize,
 }
 
 
