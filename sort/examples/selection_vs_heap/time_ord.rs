@@ -11,7 +11,7 @@ use sort::selection_sort::selection_sort_count_swaps;
 use sort::bench_utils::*;
 
 fn main() {
-    let size = 30_000;
+    let size = 45_000;
     let n_points = 40;
     let seed = 42;
 
@@ -21,7 +21,7 @@ fn main() {
             SortParams::new("Selecton sort", selection_sort),
             // SortParams::new("Heap sort", heap_sort),
         ],
-        sample_size: 10,
+        sample_size: 5,
     };
 
     let tests_collection = generate_ord_collection(size, n_points, seed);

@@ -20,7 +20,7 @@ fn bubble_sort_iter<T: Ord>(arr: &mut [T]) {
 
 
 fn contra_bubble_sort_iter<T: Ord>(arr: &mut [T]) {
-    for i in (0..arr.len()-1) {
+    for i in (0..arr.len()-1).rev() {
         if arr[i] < arr[i+1] {
             arr.swap(i, i+1);
         }

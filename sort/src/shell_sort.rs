@@ -28,6 +28,42 @@ pub fn shell_sort_knuth<T: Ord>(vec: &mut [T]) {
     }
 }
 
+pub fn shell_sort_count_swaps<T: Ord>(vec: &mut [T]) -> usize {
+    let mut n_swaps = 0;
+    let len = vec.len();
+    let mut gap = len / 2;
+    while gap > 0 {
+        for i in gap..len {
+            for j in (0..=i).rev().step_by(gap).skip(1) {
+                if vec[j] <= vec[j + gap] { continue; }
+                vec.swap(j, j + gap);
+                n_swaps += 1;
+            }
+        }
+        gap /= 2;
+    }
+    n_swaps
+}
+
+pub fn shell_sort_knuth_count_swaps<T: Ord>(vec: &mut [T]) -> usize {
+    let mut n_swaps = 0;
+    let len = vec.len();
+    let mut gap = 1;
+    while gap < len / 3 { gap = 2 * gap + 1; }
+
+    while gap >= 1 {
+        for i in gap..len {
+            for j in (0..=i).rev().step_by(gap).skip(1) {
+                if vec[j] <= vec[j + gap] { continue; }
+                vec.swap(j, j + gap);
+                n_swaps += 1;
+            }
+        }
+        gap /= 2;
+    }
+    n_swaps
+}
+
 
 #[cfg(test)]
 mod tests {
