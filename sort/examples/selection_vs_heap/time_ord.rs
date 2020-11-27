@@ -3,7 +3,10 @@ extern crate sort;
 
 use gnuplot::{Figure, AxesCommon, DashType, AutoOption, PlotOption,XAxis, YAxis};
 
-use sort::{selection_sort, heap_sort};
+use sort::{
+    selection_sort,
+    // heap_sort
+};
 use sort::selection_sort::selection_sort_count_swaps;
 use sort::bench_utils::*;
 
