@@ -13,7 +13,7 @@ use sort::bench_utils::{
 
 
 fn main() {
-    let arr_size = 8_000;
+    let arr_size = 10_000;
     let seed = 42;
     let target_vec = generate_seq(arr_size, seed);
 
@@ -23,7 +23,7 @@ fn main() {
             SortParams::new("Normal", shell_sort),
             SortParams::new("Knuth", shell_sort_knuth),
         ],
-        sizes: (5..arr_size).step_by(50).collect(),
+        sizes: (5..arr_size).step_by(100).collect(),
     };
     let cmp_time_results = compare_comps_seq(&target_vec, cmp_comp_seq_params);
 
