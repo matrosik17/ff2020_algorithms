@@ -13,7 +13,7 @@ use sort::bench_utils::{
 
 
 fn main() {
-    let arr_size = 1_000;
+    let arr_size = 1_000_000;
     let seed = 42;
     let target_vec = generate_seq(arr_size, seed);
 
@@ -23,8 +23,8 @@ fn main() {
             SortParams::new("Normal", qsort),
             SortParams::new("Iterative", qsort_iterative),
         ],
-        sizes: (5..arr_size).step_by(10).collect(),
-        sample_size: 500,
+        sizes: (0..arr_size).step_by(10_000).skip(1).collect(),
+        sample_size: 10,
     };
     let cmp_time_results = compare_time_seq(&target_vec, cmp_time_params);
     let n_logn: Vec<f64> = cmp_time_results.sizes.iter().map(|n| {

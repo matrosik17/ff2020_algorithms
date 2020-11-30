@@ -7,8 +7,8 @@ use sort::{qsort, qsort_iterative};
 use sort::bench_utils::*;
 
 fn main() {
-    let size = 100_000;
-    let n_points = 20;
+    let size = 1_000_000;
+    let n_points = 10;
     let seed = 42;
 
     let cmp_ord_params = TimeOrdParams {
@@ -17,7 +17,7 @@ fn main() {
             SortParams::new("Normal", qsort),
             SortParams::new("Iterative", qsort_iterative),
         ],
-        sample_size: 10,
+        sample_size: 1,
     };
 
     let tests_collection = generate_ord_collection(size, n_points, seed);

@@ -23,6 +23,21 @@ where
     total_duration.div_f64(sample_size as f64)
 }
 
+pub fn _measure_best_time<T, F>(sample_size: usize, mut sort: F, vec: &[T]) -> Duration
+where
+    T: Ord + Clone,
+    F: FnMut(&mut [T])
+{
+    let mut test_vec = vec.to_vec();
+    let mut best_duration = measure_time(&mut sort, &mut test_vec);
+    for _ in 1..sample_size {
+        let mut test_vec = vec.to_vec();
+        let duration = measure_time(&mut sort, &mut test_vec);
+        if duration < best_duration { best_duration = duration; }
+    }
+    best_duration
+}
+
 
 pub fn count_comps<T, F>(mut sort: F, vec: &[T]) -> usize
 where
